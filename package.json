@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "dev:backend": "./start_backend.sh",
-    "build": "next build",
-    "start": "next start",
+    "build": "NODE_OPTIONS=--max-old-space-size=460 next build",
+    "start": "next start -p ${PORT:-3000}",
     "lint": "next lint",
     "test:verify": "tsx scripts/verify-pipeline.mjs",
     "test:py": "PYTHONPATH=. ./venv/bin/python backend/test_backend.py"
