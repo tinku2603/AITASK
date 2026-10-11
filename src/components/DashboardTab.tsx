@@ -18,6 +18,7 @@ import {
   ChevronRight,
   ShieldCheck,
   Ban,
+  Trash2,
 } from "lucide-react";
 import { TimelineTracker } from "./TimelineTracker";
 import { StoredExpenseRow } from "@/lib/supabase/client";
@@ -133,6 +134,38 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({ currentRole, refresh
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
+  const handleDeleteClaim = async (expenseId: string) => {
+    if (!window.confirm("Are you sure you want to delete this claim?")) {
+      return;
+    }
+
+    setActionInProgress(expenseId);
+    // Optimistically remove from state and local storage
+    setExpenses((prev) => prev.filter((e) => e.id !== expenseId));
+
+    try {
+      const raw = localStorage.getItem("aitask_cached_expenses");
+      if (raw) {
+        const list = JSON.parse(raw);
+        const updated = list.filter((e: any) => e.id !== expenseId);
+        localStorage.setItem("aitask_cached_expenses", JSON.stringify(updated));
+      }
+    } catch (e) {}
+
+    try {
+      const res = await fetch(`/api/expenses/${expenseId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        await fetchClaims();
+      }
+    } catch (err) {
+      console.error("Failed to delete claim:", err);
     } finally {
       setActionInProgress(null);
     }
@@ -335,64 +368,76 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({ currentRole, refresh
 
                     {/* Actions */}
                     <td className="py-3.5 px-4 text-right">
-                      {currentRole === "mgr_101" && exp.status === "Pending Approval" && (
-                        <div className="flex items-center justify-end gap-1.5">
+                      <div className="flex items-center justify-end gap-2">
+                        {currentRole === "mgr_101" && exp.status === "Pending Approval" && (
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={() => handleStatusTransition(exp.id, "Rejected")}
+                              disabled={actionInProgress === exp.id}
+                              className="px-2.5 py-1 rounded bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition flex items-center gap-1"
+                            >
+                              <Ban className="w-3 h-3" />
+                              Reject
+                            </button>
+                            <button
+                              onClick={() => handleStatusTransition(exp.id, "Settlement Processing")}
+                              disabled={actionInProgress === exp.id}
+                              className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm"
+                            >
+                              <CheckCircle2 className="w-3 h-3" />
+                              Approve
+                            </button>
+                          </div>
+                        )}
+
+                        {currentRole === "mgr_101" && exp.status === "Settlement Processing" && (
                           <button
-                            onClick={() => handleStatusTransition(exp.id, "Rejected")}
+                            onClick={() => handleStatusTransition(exp.id, "Paid")}
                             disabled={actionInProgress === exp.id}
-                            className="px-2.5 py-1 rounded bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition flex items-center gap-1"
+                            className="px-2.5 py-1 rounded bg-violet-600 hover:bg-violet-500 text-white text-[11px] font-semibold transition shadow-sm"
                           >
-                            <Ban className="w-3 h-3" />
-                            Reject
+                            Mark Paid
                           </button>
+                        )}
+
+                        {exp.status === "Paid" && (
+                          <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                            Disbursed
+                          </span>
+                        )}
+
+                        {exp.status === "Rejected" && (
+                          <span className="text-[11px] font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
+                            Closed
+                          </span>
+                        )}
+
+                        {exp.status === "Draft" && (
                           <button
-                            onClick={() => handleStatusTransition(exp.id, "Settlement Processing")}
+                            onClick={() => handleStatusTransition(exp.id, "Pending Approval")}
                             disabled={actionInProgress === exp.id}
-                            className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm"
+                            className="px-2.5 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold transition shadow-sm"
                           >
-                            <CheckCircle2 className="w-3 h-3" />
-                            Approve
+                            Submit Claim
                           </button>
-                        </div>
-                      )}
+                        )}
 
-                      {currentRole === "mgr_101" && exp.status === "Settlement Processing" && (
+                        {currentRole === "emp_402" && exp.status !== "Paid" && exp.status !== "Rejected" && exp.status !== "Draft" && (
+                          <span className="text-[11px] text-slate-500 italic">
+                            Under processing
+                          </span>
+                        )}
+
+                        {/* Delete Claim Button */}
                         <button
-                          onClick={() => handleStatusTransition(exp.id, "Paid")}
+                          onClick={() => handleDeleteClaim(exp.id)}
                           disabled={actionInProgress === exp.id}
-                          className="px-2.5 py-1 rounded bg-violet-600 hover:bg-violet-500 text-white text-[11px] font-semibold transition shadow-sm"
+                          className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-rose-950/60 text-slate-400 hover:text-rose-400 border border-slate-700/60 hover:border-rose-500/40 transition"
+                          title="Delete submitted claim"
                         >
-                          Mark Paid
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
-                      )}
-
-                      {exp.status === "Paid" && (
-                        <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                          Disbursed
-                        </span>
-                      )}
-
-                      {exp.status === "Rejected" && (
-                        <span className="text-[11px] font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
-                          Closed
-                        </span>
-                      )}
-
-                      {exp.status === "Draft" && (
-                        <button
-                          onClick={() => handleStatusTransition(exp.id, "Pending Approval")}
-                          disabled={actionInProgress === exp.id}
-                          className="px-2.5 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold transition shadow-sm"
-                        >
-                          Submit Claim
-                        </button>
-                      )}
-
-                      {currentRole === "emp_402" && exp.status !== "Paid" && exp.status !== "Rejected" && exp.status !== "Draft" && (
-                        <span className="text-[11px] text-slate-500 italic">
-                          Under processing
-                        </span>
-                      )}
+                      </div>
                     </td>
                   </tr>
                 ))

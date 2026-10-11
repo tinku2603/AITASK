@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Dict, Any
 from fastapi import APIRouter, Query, HTTPException, Request
-from backend.database import fetch_expenses, fetch_expense_by_id, save_expense, update_expense
+from backend.database import fetch_expenses, fetch_expense_by_id, save_expense, update_expense, delete_expense
 
 logger = logging.getLogger("backend.routes.expenses")
 router = APIRouter(prefix="/api/expenses", tags=["Expenses"])
@@ -31,6 +31,15 @@ async def get_expense(expense_id: str):
     if not exp:
         raise HTTPException(status_code=404, detail="Expense not found")
     return {"expense": exp}
+
+@router.delete("/{expense_id}")
+async def remove_expense(expense_id: str):
+    try:
+        success = delete_expense(expense_id)
+        return {"success": success, "message": f"Expense {expense_id} deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting expense {expense_id}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.patch("/{expense_id}")
 async def patch_expense(expense_id: str, request: Request):

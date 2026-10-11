@@ -400,6 +400,20 @@ export async function updateExpense(
   return updated;
 }
 
+export async function deleteExpense(id: string): Promise<boolean> {
+  const supabase = getSupabase();
+  if (supabase) {
+    try {
+      await supabase.from("expenses").delete().eq("id", id);
+    } catch (e) {
+      console.warn("Supabase delete error:", e);
+    }
+  }
+
+  memoryExpenses.delete(id);
+  return true;
+}
+
 /**
  * Similarity match against existing expenses using pgvector RPC or fallback vector matching
  */

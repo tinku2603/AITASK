@@ -324,6 +324,29 @@ def update_expense(expense_id: str, updates: Dict[str, Any]) -> Dict[str, Any]:
 
     return sanitized
 
+def delete_expense(expense_id: str) -> bool:
+    if supabase_client:
+        try:
+            supabase_client.from_("expenses").delete().eq("id", expense_id).execute()
+            logger.info(f"Deleted expense {expense_id} from Supabase")
+        except Exception as e:
+            logger.warning(f"Supabase delete_expense warning: {e}")
+
+    memory_expenses.pop(expense_id, None)
+
+    # Remove or mark deleted in chat message cards
+    try:
+        for conv_id, msgs in memory_chat_messages.items():
+            for m in msgs:
+                if "draft_cards" in m and isinstance(m["draft_cards"], list):
+                    m["draft_cards"] = [dc for dc in m["draft_cards"] if dc.get("expense_id") != expense_id]
+                if "hitl_cards" in m and isinstance(m["hitl_cards"], list):
+                    m["hitl_cards"] = [hc for hc in m["hitl_cards"] if hc.get("expense_id") != expense_id]
+    except Exception as e:
+        logger.debug(f"Notice: memory chat messages cleanup on delete: {e}")
+
+    return True
+
 def calculate_cosine_similarity(vec_a: List[float], vec_b: List[float]) -> float:
     a = np.array(vec_a, dtype=float)
     b = np.array(vec_b, dtype=float)
