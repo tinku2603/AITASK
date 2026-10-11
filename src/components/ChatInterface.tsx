@@ -87,13 +87,38 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   useEffect(() => {
     if (!conversationId) return;
 
+    // Helper: rehydrate submitted state into draftCards using persisted submitted IDs
+    const rehydrateSubmitted = (msgs: Message[]): Message[] => {
+      try {
+        const submittedRaw = localStorage.getItem("aitask_submitted_expense_ids");
+        const submittedIds: string[] = submittedRaw ? JSON.parse(submittedRaw) : [];
+        if (submittedIds.length === 0) return msgs;
+        return msgs.map((msg) => {
+          if (!msg.draftCards || msg.draftCards.length === 0) return msg;
+          const updatedCards = msg.draftCards.map((dc) => {
+            if (submittedIds.includes(dc.expense_id)) {
+              return {
+                ...dc,
+                submitted: true,
+                expense_data: { ...dc.expense_data, status: "Pending Approval" as const },
+              };
+            }
+            return dc;
+          });
+          return { ...msg, draftCards: updatedCards };
+        });
+      } catch {
+        return msgs;
+      }
+    };
+
     // 1. Instant optimistic restore from local browser cache
     try {
       const cached = localStorage.getItem(`aitask_msgs_${conversationId}`);
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setMessages(parsed);
+          setMessages(rehydrateSubmitted(parsed));
           const docs: PreviewableDocument[] = [];
           parsed.forEach((m: any) => {
             if (m.files) {
@@ -123,9 +148,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             draftCards: m.draft_cards,
             timestamp: new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           }));
-          setMessages(loaded);
+          // Rehydrate submitted state from persisted IDs before setting state
+          const rehydrated = rehydrateSubmitted(loaded);
+          setMessages(rehydrated);
           try {
-            localStorage.setItem(`aitask_msgs_${conversationId}`, JSON.stringify(loaded));
+            localStorage.setItem(`aitask_msgs_${conversationId}`, JSON.stringify(rehydrated));
           } catch (e) {}
 
           // Populate previewable documents from history
@@ -369,6 +396,16 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   const markDraftAsSubmittedInChat = (expenseId: string) => {
+    // Persist to a global list of submitted expense IDs (survives backend reloads)
+    try {
+      const raw = localStorage.getItem("aitask_submitted_expense_ids");
+      const ids: string[] = raw ? JSON.parse(raw) : [];
+      if (!ids.includes(expenseId)) {
+        ids.push(expenseId);
+        localStorage.setItem("aitask_submitted_expense_ids", JSON.stringify(ids));
+      }
+    } catch (e) {}
+
     setMessages((prev) => {
       const updated = prev.map((msg) => {
         if (!msg.draftCards || msg.draftCards.length === 0) return msg;
