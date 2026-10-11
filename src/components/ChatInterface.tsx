@@ -223,7 +223,6 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
         setAttachedFiles((prev) => [...prev, newDoc]);
         setPreviewDocuments((prev) => [...prev, newDoc]);
-        setIsSplitPreviewOpen(true);
       };
       reader.readAsDataURL(file);
     });
