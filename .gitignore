@@ -5,6 +5,10 @@
 
 # testing
 /coverage
+/test_bills
+/test_recordings
+*.mp4
+
 
 # next.js
 /.next/
