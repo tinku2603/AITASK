@@ -63,7 +63,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       id: "welcome",
       sender: "assistant",
       text: "👋 Hello! I am your Autonomous Expense Agent. Drop any receipt (Image or PDF) or pick a test preset below. I will run the multi-agent pipeline: Extraction ➔ pgvector De-duplication ➔ Human-in-the-Loop review ➔ ERP Execution.",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: "",
     },
   ]);
 
@@ -736,9 +736,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   </div>
                 )}
 
-                <span className="block text-[10px] text-slate-500 mt-2 text-right">
-                  {msg.timestamp}
-                </span>
+                {msg.timestamp && (
+                  <span suppressHydrationWarning className="block text-[10px] text-slate-500 mt-2 text-right">
+                    {msg.timestamp}
+                  </span>
+                )}
               </div>
             </div>
           ))}

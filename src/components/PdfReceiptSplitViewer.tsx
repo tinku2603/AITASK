@@ -196,35 +196,37 @@ export const PdfReceiptSplitViewer: React.FC<PdfReceiptSplitViewerProps> = ({
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{pdfError}</span>
             </div>
-          ) : pdfBlobUrl ? (
-            <object
-              data={pdfBlobUrl}
-              type="application/pdf"
-              className="w-full h-full rounded-xl border border-slate-800 shadow-inner bg-slate-950"
-            >
-              <iframe
-                src={pdfBlobUrl}
-                className="w-full h-full rounded-xl border border-slate-800"
-                title={currentDoc.name}
-              />
-              <div className="p-6 text-center text-xs text-slate-400">
-                <p>PDF embedded preview not supported by your browser.</p>
-                <a
-                  href={pdfBlobUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-500"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  Open PDF in New Window
-                </a>
-              </div>
-            </object>
           ) : (
-            <div className="text-xs text-slate-500 animate-pulse">Rendering PDF document...</div>
+            <div className="w-full h-full min-h-[520px] flex flex-col rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
+              <object
+                data={pdfBlobUrl || `data:application/pdf;base64,${currentDoc.base64}`}
+                type="application/pdf"
+                className="w-full h-full min-h-[520px] flex-1 rounded-xl"
+              >
+                <embed
+                  src={pdfBlobUrl || `data:application/pdf;base64,${currentDoc.base64}`}
+                  type="application/pdf"
+                  className="w-full h-full min-h-[520px] rounded-xl"
+                />
+                <div className="p-6 text-center text-xs text-slate-400">
+                  <p className="mb-2">Previewing PDF: {currentDoc.name}</p>
+                  {pdfBlobUrl && (
+                    <a
+                      href={pdfBlobUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-500"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      View Document in New Tab
+                    </a>
+                  )}
+                </div>
+              </object>
+            </div>
           )
         ) : (
-          <div className="w-full h-full flex items-center justify-center overflow-auto">
+          <div className="w-full h-full flex items-center justify-center overflow-auto p-2">
             <img
               src={imageSrc}
               alt={currentDoc.name}
