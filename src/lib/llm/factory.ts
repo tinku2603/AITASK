@@ -167,6 +167,30 @@ function mockExtractor(input: VisionPromptInput): string {
   const userText = input.userPrompt.toLowerCase();
   const today = new Date().toISOString().split("T")[0];
 
+  // Check if Rapido travel bill scenario
+  if (userText.includes("rapido")) {
+    return JSON.stringify({
+      expenses: [
+        {
+          bill_type: "CAB_LOCAL",
+          bill_date: today,
+          vendor_name: "Rapido",
+          total_amount: 500,
+          currency: "INR",
+          payment_mode: "UPI",
+          remarks: "Travel bill - Client visit via Rapido auto/bike",
+          specific_details: {
+            from_place: "Koramangala",
+            to_place: "Electronic City",
+            line_items: [{ description: "Rapido Travel Ride", amount: 500 }],
+          },
+        },
+      ],
+      raw_reasoning: "Extracted Rapido city travel slip for client visit.",
+      page_count: 1,
+    });
+  }
+
   // Check if round-trip scenario
   if (userText.includes("return") || userText.includes("round trip") || userText.includes("back to office")) {
     return JSON.stringify({

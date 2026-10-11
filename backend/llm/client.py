@@ -25,6 +25,25 @@ def get_mock_receipt_extraction(user_prompt: str, files: List[Dict[str, Any]]) -
     file_names = " ".join([f.get("name", "").lower() for f in files])
     prompt_lower = user_prompt.lower()
 
+    # Corner Case 0: Rapido Travel Bill
+    if "rapido" in prompt_lower or "rapido" in file_names:
+        return json.dumps({
+            "expenses": [{
+                "bill_type": "CAB_LOCAL",
+                "bill_date": today_str,
+                "vendor_name": "Rapido",
+                "total_amount": 500.0,
+                "currency": "INR",
+                "payment_mode": "UPI",
+                "remarks": "Travel bill - Client visit via Rapido auto/bike",
+                "specific_details": {
+                    "from_place": "Koramangala",
+                    "to_place": "Electronic City",
+                    "line_items": [{"description": "Rapido Travel Ride", "quantity": 1, "amount": 500.0}]
+                }
+            }]
+        })
+
     # Corner Case 1: Round Trip Cab
     if "return" in prompt_lower or "round trip" in prompt_lower or "whitefield" in prompt_lower:
         return json.dumps({

@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 795.82 1449" width="795.82" height="1449" style="--bg:#1F1F1F;--fg:#CCCCCC;--line:#CCCCCC;--accent:#0078D4;--muted:#CCCCCCCC;--surface:#181818;--border:#CCCCCC;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<g class="subgraph" data-id="ClientLayer" data-label="Client Layer (Next.js 15)">
+  <rect x="40" y="40" width="696.241" height="181.8" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="40" y="40" width="696.241" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="52" y="54" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Client Layer (Next.js 15)</text>
+</g>
+<g class="subgraph" data-id="ProxyLayer" data-label="API Routing &amp; Ingress">
+  <rect x="379.9870000000001" y="281.8" width="225.855" height="96.9" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="379.9870000000001" y="281.8" width="225.855" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="391.9870000000001" y="295.8" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">API Routing &amp; Ingress</text>
+</g>
+<g class="subgraph" data-id="BackendLayer" data-label="Backend Services (FastAPI)">
+  <rect x="169.247" y="438.70000000000005" width="586.573" height="181.8" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="169.247" y="438.70000000000005" width="586.573" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="181.247" y="452.70000000000005" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Backend Services (FastAPI)</text>
+</g>
+<g class="subgraph" data-id="AgentPipeline" data-label="Orchestrated 4-Agent Pipeline">
+  <rect x="66.47649999999993" y="680.5" width="623.056" height="454.00000000000006" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="66.47649999999993" y="680.5" width="623.056" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="78.47649999999993" y="694.5" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Orchestrated 4-Agent Pipeline</text>
+</g>
+<g class="subgraph" data-id="DataPersistence" data-label="Data &amp; Persistence Layer">
+  <rect x="158.72762499999996" y="1194.5" width="423.25699999999995" height="214.5" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="158.72762499999996" y="1194.5" width="423.25699999999995" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="170.72762499999996" y="1208.5" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Data &amp; Persistence Layer</text>
+</g>
+<polyline class="edge" data-from="ChatUI" data-to="NextRewrites" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="140.701,205.8 140.701,265.8 492.9145000000001,265.8 492.9145000000001,325.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Dashboard" data-to="NextRewrites" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="607.0115,205.8 607.0115,265.8 492.9145000000001,265.8 492.9145000000001,325.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="NextRewrites" data-to="FastAPIApp" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="492.9145000000001,362.70000000000005 492.9145,482.70000000000005" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="RouterChat" data-to="Agent1" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="672.5325,604.5 672.5324999999999,858.6 588.2864999999999,858.6 588.2864999999999,894.6" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent1" data-to="SupabaseDB" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="527.0405,948.4 527.0405,1111.45 476.46712499999995,1111.45 476.46712499999995,1274.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent2" data-to="SupabaseDB" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="489.2692142857142,778.3 489.2692142857142,790.3 659.5324999999999,790.3 659.5325,1176.5 521.225875,1176.5 521.225875,1274.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent4" data-to="SupabaseDB" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="260.47399999999993,1118.5 260.47399999999993,1182.5 476.46712499999995,1182.5 476.46712499999995,1274.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent1" data-to="MemoryCache" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="527.0405,948.4 527.0405,1111.45 266.838625,1111.45 266.838625,1274.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent2" data-to="MemoryCache" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="301.5777857142857,778.3 301.5777857142857,790.3 82.47649999999993,790.3 82.47649999999993,1176.5 220.78312499999996,1176.5 220.78312499999996,1274.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent4" data-to="MemoryCache" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="260.47399999999993,1118.5 260.47399999999993,1182.5 266.838625,1182.5 266.838625,1274.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="UI" data-to="ChatUI" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="359.5919999999999,120.9 359.5919999999999,144.9 140.701,144.9 140.701,168.9" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="UI" data-to="SplitViewer" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="359.5919999999999,120.9 359.5919999999999,144.9 359.592,144.9 359.592,168.9" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="UI" data-to="Dashboard" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="359.5919999999999,120.9 359.5919999999999,144.9 607.0115,144.9 607.0115,168.9" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="FastAPIApp" data-to="RouterChat" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="492.9145,519.6 492.9145,543.6 672.5325,543.6 672.5325,567.6" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="FastAPIApp" data-to="RouterExpenses" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="492.9145,519.6 492.9145,543.6 492.9145,543.6 492.9145,567.6" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="FastAPIApp" data-to="RouterConvs" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="492.9145,519.6 492.9145,543.6 282.9155,543.6 282.9155,567.6" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent1" data-to="Agent2" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="465.79449999999997,894.6 465.79449999999997,858.6 436.7713571428571,858.6 436.7713571428571,790.3 414.1926428571428,790.3 414.1926428571428,778.3" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent2" data-to="Agent1" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Similarity &gt;= 0.95 (Block)" points="451.73092857142854,778.3 451.73092857142854,802.3 532.9175,802.3 532.9175,858.6 527.0405,858.6 527.0405,894.6" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent2" data-to="Agent3" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="0.85 &lt;= Similarity &lt; 0.95 or Blurry" points="339.1160714285714,778.3 339.1160714285714,802.3 181.1414999999999,802.3 181.14149999999992,894.6" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent2" data-to="Agent4" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Clean &amp; Unique" points="376.65435714285707,778.3 376.65435714285707,814.3 336.80649999999997,814.3 336.80649999999997,1028.7 300.06966666666665,1028.7 300.06966666666665,1064.7" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent3" data-to="Agent4" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="User Resolved" points="181.14149999999992,948.4000000000001 181.1414999999999,1028.7 220.87833333333327,1028.7 220.87833333333327,1064.7" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<g class="edge-label" data-from="Agent2" data-to="Agent1" data-label="Similarity &gt;= 0.95 (Block)">
+  <rect x="466.9174999999999" y="821.3000000000001" width="131.10400000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="532.4694999999999" y="836.45" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Similarity &gt;= 0.95 (Block)</text>
+</g>
+<g class="edge-label" data-from="Agent2" data-to="Agent3" data-label="0.85 &lt;= Similarity &lt; 0.95 or Blurry">
+  <rect x="95.6414999999999" y="821.3000000000001" width="170.90200000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="181.09249999999992" y="836.45" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">0.85 &lt;= Similarity &lt; 0.95 or Blurry</text>
+</g>
+<g class="edge-label" data-from="Agent2" data-to="Agent4" data-label="Clean &amp; Unique">
+  <rect x="292.80649999999997" y="906.35" width="87.742" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="336.67749999999995" y="921.5" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Clean &amp; Unique</text>
+</g>
+<g class="edge-label" data-from="Agent3" data-to="Agent4" data-label="User Resolved">
+  <rect x="136.6414999999999" y="991.4" width="88.33600000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="180.8094999999999" y="1006.55" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">User Resolved</text>
+</g>
+<g class="node" data-id="UI" data-label="Web Portal (Tailwind CSS, Lucide)" data-shape="rectangle">
+  <rect x="239.69349999999994" y="84" width="239.79699999999994" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="359.5919999999999" y="102.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Web Portal (Tailwind CSS, Lucide)</text>
+</g>
+<g class="node" data-id="ChatUI" data-label="Agentic Chat Interface" data-shape="rectangle">
+  <rect x="56" y="168.9" width="169.402" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="140.701" y="187.35000000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Agentic Chat Interface</text>
+</g>
+<g class="node" data-id="SplitViewer" data-label="Split-Pane PDF/Image Viewer" data-shape="rectangle">
+  <rect x="253.402" y="168.9" width="212.37999999999994" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="359.592" y="187.35000000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Split-Pane PDF/Image Viewer</text>
+</g>
+<g class="node" data-id="Dashboard" data-label="Claims Management Dashboard" data-shape="rectangle">
+  <rect x="493.7819999999999" y="168.9" width="226.459" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="607.0115" y="187.35000000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Claims Management Dashboard</text>
+</g>
+<g class="node" data-id="NextRewrites" data-label="Next.js API Rewrites /api/*" data-shape="rectangle">
+  <rect x="395.9870000000001" y="325.8" width="193.855" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="492.9145000000001" y="344.25" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Next.js API Rewrites /api/*</text>
+</g>
+<g class="node" data-id="FastAPIApp" data-label="FastAPI Service (Port 8000)" data-shape="rectangle">
+  <rect x="390.05899999999997" y="482.70000000000005" width="205.71099999999998" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="492.9145" y="501.15000000000003" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">FastAPI Service (Port 8000)</text>
+</g>
+<g class="node" data-id="RouterChat" data-label="/api/chat Router" data-shape="rectangle">
+  <rect x="605.245" y="567.6" width="134.57500000000002" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="672.5325" y="586.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">/api/chat Router</text>
+</g>
+<g class="node" data-id="RouterExpenses" data-label="/api/expenses Router" data-shape="rectangle">
+  <rect x="408.584" y="567.6" width="168.661" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="492.9145" y="586.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">/api/expenses Router</text>
+</g>
+<g class="node" data-id="RouterConvs" data-label="/api/conversations Router" data-shape="rectangle">
+  <rect x="185.247" y="567.6" width="195.337" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="282.9155" y="586.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">/api/conversations Router</text>
+</g>
+<g class="node" data-id="Agent1" data-label="Agent 1: Extraction &amp; Categorization
+(Multimodal Vision LLM)" data-shape="rectangle">
+  <rect x="404.5485" y="894.6" width="244.98399999999995" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="527.0405" y="921.5" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="527.0405" dy="-3.9000000000000012">Agent 1: Extraction &amp; Categorization</tspan><tspan x="527.0405" dy="16.900000000000002">(Multimodal Vision LLM)</tspan></text>
+</g>
+<g class="node" data-id="Agent2" data-label="Agent 2: Vector Deduplication Engine
+(Gemini Embedding + Cosine Distance)" data-shape="rectangle">
+  <rect x="264.0395" y="724.5" width="262.7679999999999" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="395.42349999999993" y="751.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="395.42349999999993" dy="-3.9000000000000012">Agent 2: Vector Deduplication Engine</tspan><tspan x="395.42349999999993" dy="16.900000000000002">(Gemini Embedding + Cosine Distance)</tspan></text>
+</g>
+<g class="node" data-id="Agent3" data-label="Agent 3: HITL Mediator
+(Interactive UI Cards)" data-shape="rectangle">
+  <rect x="93.47649999999993" y="894.6" width="175.32999999999998" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="181.14149999999992" y="921.5" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="181.14149999999992" dy="-3.9000000000000012">Agent 3: HITL Mediator</tspan><tspan x="181.14149999999992" dy="16.900000000000002">(Interactive UI Cards)</tspan></text>
+</g>
+<g class="node" data-id="Agent4" data-label="Agent 4: ERP Settlement Executor
+(State Transitions &amp; Audit Ledger)" data-shape="rectangle">
+  <rect x="141.68699999999995" y="1064.7" width="237.57399999999998" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="260.47399999999993" y="1091.6000000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="260.47399999999993" dy="-3.9000000000000012">Agent 4: ERP Settlement Executor</tspan><tspan x="260.47399999999993" dy="16.900000000000002">(State Transitions &amp; Audit Ledger)</tspan></text>
+</g>
+<g class="node" data-id="SupabaseDB" data-label="Supabase PostgreSQL
+- expenses table
+- pgvector 768-dim
+- conversations
+- chat_messages" data-shape="cylinder">
+  <rect x="386.94962499999997" y="1281.5" width="179.03499999999997" height="104.50000000000001" fill="var(--_node-fill)" stroke="none" />
+  <line x1="386.94962499999997" y1="1281.5" x2="386.94962499999997" y2="1386" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <line x1="565.9846249999999" y1="1281.5" x2="565.9846249999999" y2="1386" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="476.46712499999995" cy="1386" rx="89.51749999999998" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="476.46712499999995" cy="1281.5" rx="89.51749999999998" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="476.46712499999995" y="1333.75" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="476.46712499999995" dy="-29.250000000000004">Supabase PostgreSQL</tspan><tspan x="476.46712499999995" dy="16.900000000000002">- expenses table</tspan><tspan x="476.46712499999995" dy="16.900000000000002">- pgvector 768-dim</tspan><tspan x="476.46712499999995" dy="16.900000000000002">- conversations</tspan><tspan x="476.46712499999995" dy="16.900000000000002">- chat_messages</tspan></text>
+</g>
+<g class="node" data-id="MemoryCache" data-label="In-Memory Store
+Zero-Downtime Fallback" data-shape="cylinder">
+  <rect x="174.72762499999996" y="1281.5" width="184.22199999999998" height="53.80000000000001" fill="var(--_node-fill)" stroke="none" />
+  <line x1="174.72762499999996" y1="1281.5" x2="174.72762499999996" y2="1335.3" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <line x1="358.94962499999997" y1="1281.5" x2="358.94962499999997" y2="1335.3" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="266.838625" cy="1335.3" rx="92.11099999999999" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="266.838625" cy="1281.5" rx="92.11099999999999" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="266.838625" y="1308.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="266.838625" dy="-3.9000000000000012">In-Memory Store</tspan><tspan x="266.838625" dy="16.900000000000002">Zero-Downtime Fallback</tspan></text>
+</g>
+</svg>
