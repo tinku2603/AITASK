@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Convert Markdown to Professional PDF with Custom Cover Page using Playwright & Chromium.
+Convert Markdown to Professional PDF with Custom Cover Page and Rendered Mermaid Diagrams.
 
 Usage:
     ./venv/bin/python md_to_pdf.py [input_markdown] [output_pdf]
@@ -11,6 +11,7 @@ Examples:
 
 import sys
 import os
+import re
 import asyncio
 import markdown
 from playwright.async_api import async_playwright
@@ -36,12 +37,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <title>Technical Document</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
     @page {
         size: A4;
-        margin: 20mm 18mm 20mm 18mm;
+        margin: 18mm 16mm 18mm 16mm;
     }
 
     * {
@@ -50,7 +52,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     body {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 10.5pt;
+        font-size: 10pt;
         line-height: 1.6;
         color: #1e293b;
         margin: 0;
@@ -125,6 +127,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         break-after: page;
     }
 
+    /* Mermaid Diagrams Styling */
+    .mermaid-container {
+        margin: 24px 0;
+        padding: 16px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .mermaid {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .mermaid svg {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
     /* Markdown Document Content */
     .markdown-body {
         padding-top: 10px;
@@ -134,6 +160,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         color: #0f172a;
         font-weight: 700;
         line-height: 1.3;
+        page-break-after: avoid;
     }
 
     h1 {
@@ -153,18 +180,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
 
     h3 {
-        font-size: 12.5pt;
+        font-size: 12pt;
         margin-top: 20px;
         margin-bottom: 8px;
     }
 
     p {
-        margin: 10px 0;
+        margin: 8px 0;
     }
 
     code {
         font-family: 'JetBrains Mono', Consolas, monospace;
-        font-size: 9pt;
+        font-size: 8.5pt;
         background: #f1f5f9;
         color: #0f172a;
         padding: 2px 6px;
@@ -175,13 +202,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     pre {
         background: #0f172a;
         color: #f8fafc;
-        padding: 14px 18px;
+        padding: 14px 16px;
         border-radius: 8px;
         overflow-x: auto;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 8.5pt;
+        font-size: 8pt;
         line-height: 1.45;
         margin: 14px 0;
+        page-break-inside: avoid;
     }
 
     pre code {
@@ -195,17 +223,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         width: 100%;
         border-collapse: collapse;
         margin: 16px 0;
-        font-size: 9.5pt;
+        font-size: 9pt;
+        page-break-inside: avoid;
     }
 
     th, td {
         border: 1px solid #cbd5e1;
-        padding: 8px 12px;
+        padding: 7px 10px;
         text-align: left;
     }
 
     th {
-        background: #f8fafc;
+        background: #f1f5f9;
         font-weight: 600;
         color: #334155;
     }
@@ -215,8 +244,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
 
     blockquote {
-        margin: 14px 0;
-        padding: 10px 18px;
+        margin: 12px 0;
+        padding: 8px 16px;
         background: #f8fafc;
         border-left: 4px solid #6366f1;
         color: #475569;
@@ -226,18 +255,26 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     hr {
         border: none;
         border-top: 1px solid #e2e8f0;
-        margin: 24px 0;
+        margin: 20px 0;
     }
 
     ul, ol {
-        padding-left: 24px;
-        margin: 10px 0;
+        padding-left: 22px;
+        margin: 8px 0;
     }
 
     li {
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
 </style>
+<script>
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'neutral',
+        flowchart: { curve: 'linear' },
+        sequence: { showSequenceNumbers: true }
+    });
+</script>
 </head>
 <body>
     {COVER_PAGE}
@@ -257,7 +294,14 @@ async def convert_md_to_pdf(md_path: str, pdf_path: str):
     with open(md_path, "r", encoding="utf-8") as f:
         md_text = f.read()
 
-    # Convert markdown to html with tables and fenced code blocks
+    # Pre-process: Replace ```mermaid ... ``` code fences with <div class="mermaid-container"><div class="mermaid">...</div></div>
+    def replace_mermaid(match):
+        diagram_code = match.group(1).strip()
+        return f'<div class="mermaid-container"><div class="mermaid">\n{diagram_code}\n</div></div>'
+
+    md_text = re.sub(r'```mermaid\s*\n([\s\S]*?)\n```', replace_mermaid, md_text)
+
+    # Convert remaining markdown to HTML
     html_content = markdown.markdown(
         md_text,
         extensions=["fenced_code", "tables", "nl2br", "sane_lists"]
@@ -269,7 +313,7 @@ async def convert_md_to_pdf(md_path: str, pdf_path: str):
     with open(temp_html_path, "w", encoding="utf-8") as f:
         f.write(full_html)
 
-    print("🚀 Launching Chromium to generate PDF...")
+    print("🚀 Launching Chromium to render Mermaid diagrams and generate PDF...")
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
@@ -277,6 +321,14 @@ async def convert_md_to_pdf(md_path: str, pdf_path: str):
         # Load the HTML file
         await page.goto(f"file://{os.path.abspath(temp_html_path)}", wait_until="networkidle")
         
+        # Wait for all Mermaid SVGs to finish rendering
+        try:
+            await page.wait_for_selector(".mermaid svg", timeout=8000)
+            print("✨ Mermaid diagrams rendered to SVG successfully!")
+            await page.wait_for_timeout(1000)
+        except Exception as e:
+            print(f"Notice regarding diagram rendering: {e}")
+
         # Print to PDF with headers, footers and page numbering
         await page.pdf(
             path=pdf_path,
@@ -302,7 +354,7 @@ async def convert_md_to_pdf(md_path: str, pdf_path: str):
     if os.path.exists(temp_html_path):
         os.remove(temp_html_path)
 
-    print(f"✅ Successfully created PDF: {pdf_path}")
+    print(f"✅ Successfully created publication-ready PDF with diagrams: {pdf_path}")
 
 if __name__ == "__main__":
     input_file = sys.argv[1] if len(sys.argv) > 1 else "TECHNICAL_DESIGN_DOCUMENT.md"
