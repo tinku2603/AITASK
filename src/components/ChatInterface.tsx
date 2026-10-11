@@ -87,25 +87,38 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   useEffect(() => {
     if (!conversationId) return;
 
-    // Helper: rehydrate submitted state into draftCards using persisted submitted IDs
+    // Helper: rehydrate submitted state and filter out deleted expenses from cards
     const rehydrateSubmitted = (msgs: Message[]): Message[] => {
       try {
+        const delRaw = localStorage.getItem("aitask_deleted_expense_ids");
+        const deletedIds: string[] = delRaw ? JSON.parse(delRaw) : [];
+
         const submittedRaw = localStorage.getItem("aitask_submitted_expense_ids");
         const submittedIds: string[] = submittedRaw ? JSON.parse(submittedRaw) : [];
-        if (submittedIds.length === 0) return msgs;
+
         return msgs.map((msg) => {
-          if (!msg.draftCards || msg.draftCards.length === 0) return msg;
-          const updatedCards = msg.draftCards.map((dc) => {
-            if (submittedIds.includes(dc.expense_id)) {
-              return {
-                ...dc,
-                submitted: true,
-                expense_data: { ...dc.expense_data, status: "Pending Approval" as const },
-              };
-            }
-            return dc;
-          });
-          return { ...msg, draftCards: updatedCards };
+          let updatedCards = msg.draftCards;
+          if (updatedCards && updatedCards.length > 0) {
+            updatedCards = updatedCards
+              .filter((dc) => !deletedIds.includes(dc.expense_id))
+              .map((dc) => {
+                if (submittedIds.includes(dc.expense_id)) {
+                  return {
+                    ...dc,
+                    submitted: true,
+                    expense_data: { ...dc.expense_data, status: "Pending Approval" as const },
+                  };
+                }
+                return dc;
+              });
+          }
+
+          let updatedHitl = msg.hitlCards;
+          if (updatedHitl && updatedHitl.length > 0) {
+            updatedHitl = updatedHitl.filter((hc) => !deletedIds.includes(hc.expense_id));
+          }
+
+          return { ...msg, draftCards: updatedCards, hitlCards: updatedHitl };
         });
       } catch {
         return msgs;

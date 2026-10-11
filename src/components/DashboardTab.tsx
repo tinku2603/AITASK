@@ -44,33 +44,40 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({ currentRole, refresh
       const data = await res.json();
       const apiExpenses: StoredExpenseRow[] = Array.isArray(data.expenses) ? data.expenses : [];
 
-      // 2. Read locally cached expenses to guarantee instant visibility of newly created claims
+      // 2. Read locally cached expenses and deleted IDs
       let localCached: StoredExpenseRow[] = [];
+      let deletedIds: string[] = [];
       try {
+        const delRaw = localStorage.getItem("aitask_deleted_expense_ids");
+        if (delRaw) deletedIds = JSON.parse(delRaw) || [];
+
         const raw = localStorage.getItem("aitask_cached_expenses");
         if (raw) {
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed)) {
             localCached = parsed.filter(
-              (item) => currentRole !== "emp_402" || !item.user_id || item.user_id === "emp_402"
+              (item) =>
+                !deletedIds.includes(item.id) &&
+                (currentRole !== "emp_402" || !item.user_id || item.user_id === "emp_402")
             );
           }
         }
       } catch (e) {}
 
-      // 3. Merge: prioritize newer state between API and local cache
+      // 3. Filter apiExpenses by deletedIds
+      const validApiExpenses = apiExpenses.filter((exp) => !deletedIds.includes(exp.id));
+
+      // 4. Merge: API is the authoritative source for existing items
       const expenseMap = new Map<string, StoredExpenseRow>();
-      // First populate with API expenses
-      apiExpenses.forEach((exp) => expenseMap.set(exp.id, exp));
-      // Then merge local cached expenses (adding any missing ones or updating if newer)
+      validApiExpenses.forEach((exp) => expenseMap.set(exp.id, exp));
+
+      // Only merge local items that were created very recently (within 1 minute) and not in deletedIds
+      const oneMinuteAgo = Date.now() - 60000;
       localCached.forEach((local) => {
-        const existing = expenseMap.get(local.id);
-        if (!existing) {
-          expenseMap.set(local.id, local);
-        } else {
-          // If local has updated status (e.g. submitted to Pending Approval), prefer it
-          if (local.status !== existing.status && local.status !== "Draft") {
-            expenseMap.set(local.id, { ...existing, ...local });
+        if (!expenseMap.has(local.id) && !deletedIds.includes(local.id)) {
+          const createdAt = new Date(local.created_at || 0).getTime();
+          if (createdAt > oneMinuteAgo) {
+            expenseMap.set(local.id, local);
           }
         }
       });
@@ -149,11 +156,28 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({ currentRole, refresh
     setExpenses((prev) => prev.filter((e) => e.id !== expenseId));
 
     try {
+      // 1. Remove from local cached expenses
       const raw = localStorage.getItem("aitask_cached_expenses");
       if (raw) {
         const list = JSON.parse(raw);
         const updated = list.filter((e: any) => e.id !== expenseId);
         localStorage.setItem("aitask_cached_expenses", JSON.stringify(updated));
+      }
+
+      // 2. Track in aitask_deleted_expense_ids so it cannot resurrect
+      const delRaw = localStorage.getItem("aitask_deleted_expense_ids");
+      const delList: string[] = delRaw ? JSON.parse(delRaw) : [];
+      if (!delList.includes(expenseId)) {
+        delList.push(expenseId);
+        localStorage.setItem("aitask_deleted_expense_ids", JSON.stringify(delList));
+      }
+
+      // 3. Remove from aitask_submitted_expense_ids
+      const subRaw = localStorage.getItem("aitask_submitted_expense_ids");
+      if (subRaw) {
+        const subList: string[] = JSON.parse(subRaw);
+        const updatedSub = subList.filter((id) => id !== expenseId);
+        localStorage.setItem("aitask_submitted_expense_ids", JSON.stringify(updatedSub));
       }
     } catch (e) {}
 
