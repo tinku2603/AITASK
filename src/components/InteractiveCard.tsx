@@ -24,11 +24,19 @@ export const InteractiveCard: React.FC<InteractiveCardProps> = ({ card, onResolv
   const [isSubmitting, setIsSubmitting] = useState(false);
   const initialResolved =
     card.expense_data.status === "Pending Approval"
-      ? "confirmed"
+      ? (card.reason === "MISSING_METADATA" ? "manual_submitted" : "confirmed")
       : card.expense_data.status === "Rejected"
       ? "discarded"
       : null;
   const [resolvedStatus, setResolvedStatus] = useState<string | null>(initialResolved);
+
+  React.useEffect(() => {
+    if (card.expense_data.status === "Pending Approval") {
+      setResolvedStatus(card.reason === "MISSING_METADATA" ? "manual_submitted" : "confirmed");
+    } else if (card.expense_data.status === "Rejected") {
+      setResolvedStatus("discarded");
+    }
+  }, [card.expense_data.status, card.reason]);
 
   // Editable fields for missing metadata scenario
   const [vendorName, setVendorName] = useState(card.expense_data.vendor_name || "");

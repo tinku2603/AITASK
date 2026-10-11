@@ -38,6 +38,26 @@ async def post_conversation(request: Request):
 async def get_conversation_messages(conversation_id: str):
     try:
         messages = fetch_chat_messages(conversation_id)
+        # Enrich draft_cards and hitl_cards with live status from expenses store
+        for msg in messages:
+            draft_cards = msg.get("draft_cards") or []
+            for dc in draft_cards:
+                exp_id = dc.get("expense_id")
+                if exp_id:
+                    latest = fetch_expense_by_id(exp_id)
+                    if latest:
+                        dc["expense_data"] = latest
+                        if latest.get("status") in ["Pending Approval", "Settlement Processing", "Paid", "Rejected"]:
+                            dc["submitted"] = True
+
+            hitl_cards = msg.get("hitl_cards") or []
+            for hc in hitl_cards:
+                exp_id = hc.get("expense_id")
+                if exp_id:
+                    latest = fetch_expense_by_id(exp_id)
+                    if latest:
+                        hc["expense_data"] = latest
+
         return {"messages": messages}
     except Exception as e:
         logger.error(f"Error fetching messages: {e}")
