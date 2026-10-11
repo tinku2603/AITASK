@@ -8,6 +8,7 @@ from backend.database import (
     delete_conversation,
     update_conversation_title,
     fetch_chat_messages,
+    fetch_expense_by_id,
 )
 
 logger = logging.getLogger("backend.routes.conversations")
