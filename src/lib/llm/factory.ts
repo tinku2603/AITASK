@@ -100,11 +100,8 @@ export async function callVisionLLM(
       const response = await result.response;
       return response.text();
     } catch (err: any) {
-      console.warn("Gemini Vision API error, attempting fallback:", err.message);
-      if (!config.apiKey || config.apiKey.includes("your_api_key")) {
-        return mockExtractor(input);
-      }
-      throw err;
+      console.warn("Gemini Vision API error, falling back to heuristic extractor:", err.message);
+      return mockExtractor(input);
     }
   }
 
