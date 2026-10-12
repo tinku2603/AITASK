@@ -164,7 +164,7 @@ export const InteractiveCard: React.FC<InteractiveCardProps> = ({ card, onResolv
         <div>
           <p className="font-semibold text-emerald-200">Confirmed as Unique Claim</p>
           <p className="text-xs text-emerald-400/80">
-            Override applied. Claim #{card.expense_id.slice(0, 8)} sent to ERP and set to Pending Approval.
+            Override applied. Claim #{card.expense_id ? card.expense_id.slice(0, 8) : "N/A"} sent to ERP and set to Pending Approval.
           </p>
         </div>
       </div>
@@ -178,7 +178,7 @@ export const InteractiveCard: React.FC<InteractiveCardProps> = ({ card, onResolv
         <div>
           <p className="font-semibold text-slate-300">Duplicate Discarded</p>
           <p className="text-xs text-slate-500">
-            Claim #{card.expense_id.slice(0, 8)} has been dropped and archived.
+            Claim #{card.expense_id ? card.expense_id.slice(0, 8) : "N/A"} has been dropped and archived.
           </p>
         </div>
       </div>
@@ -252,7 +252,7 @@ export const InteractiveCard: React.FC<InteractiveCardProps> = ({ card, onResolv
               <p><strong className="text-slate-400">Vendor:</strong> {card.conflicting_expense.matched_vendor}</p>
               <p><strong className="text-slate-400">Date:</strong> {card.conflicting_expense.matched_date}</p>
               <p><strong className="text-slate-400">Amount:</strong> ₹{card.conflicting_expense.matched_amount?.toFixed(2)}</p>
-              <p><strong className="text-slate-400">Ref ID:</strong> #{card.conflicting_expense.matched_expense_id.slice(0, 8)}</p>
+              <p><strong className="text-slate-400">Ref ID:</strong> #{card.conflicting_expense?.matched_expense_id ? card.conflicting_expense.matched_expense_id.slice(0, 8) : "N/A"}</p>
             </div>
           </div>
         </div>

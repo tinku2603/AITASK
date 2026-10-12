@@ -60,7 +60,7 @@ export const DraftActionCard: React.FC<DraftActionCardProps> = ({
         <div>
           <p className="font-semibold text-emerald-200">Claim Submitted to ERP</p>
           <p className="text-[11px] text-emerald-400/80">
-            Draft #{card.expense_id.slice(0, 8)} advanced directly to Pending Approval.
+            Draft #{card.expense_id ? card.expense_id.slice(0, 8) : "N/A"} advanced directly to Pending Approval.
           </p>
         </div>
       </div>

@@ -353,7 +353,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({ currentRole, refresh
                     {/* ID & Date */}
                     <td className="py-3.5 px-4">
                       <div className="font-mono text-indigo-400 font-bold">
-                        #{exp.id.slice(0, 8)}
+                        #{exp?.id ? exp.id.slice(0, 8) : "N/A"}
                       </div>
                       <div className="text-[11px] text-slate-500 mt-0.5">
                         {exp.bill_date}

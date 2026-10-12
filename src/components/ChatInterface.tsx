@@ -694,7 +694,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                       {msg.events.map((ev, idx) => (
                         <div key={idx} className="flex items-start gap-2 py-0.5 text-slate-400">
                           <span className="text-[10px] text-slate-600 font-mono mt-0.5">
-                            {ev.timestamp.split("T")[1]?.slice(0, 8)}
+                            {ev?.timestamp?.includes("T") ? ev.timestamp.split("T")[1]?.slice(0, 8) : ev?.timestamp || ""}
                           </span>
                           <span className="text-slate-300 leading-snug">{ev.message}</span>
                         </div>
