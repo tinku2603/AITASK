@@ -133,11 +133,19 @@ async def process_expense_pipeline(
         # Moderate Match 0.80 - 0.95: Human Override Required
         if dedup_status == "POTENTIAL_DUPLICATE":
             emit("HITL_TRIGGERED", f"{prefix}Agent 2 POTENTIAL DUPLICATE ({similarity * 100:.1f}% match). Halting for user confirmation.")
-            conflicting = dedup.get("matched_record") or {}
+            raw_conflicting = dedup.get("matched_record") or {}
+            conflicting = {
+                "matched_expense_id": raw_conflicting.get("id") or raw_conflicting.get("matched_expense_id") or "",
+                "matched_vendor": raw_conflicting.get("vendor_name") or raw_conflicting.get("matched_vendor") or "",
+                "matched_date": raw_conflicting.get("bill_date") or raw_conflicting.get("matched_date") or "",
+                "matched_amount": float(raw_conflicting.get("total_amount") or raw_conflicting.get("matched_amount") or 0.0),
+                "similarity_score": similarity,
+                "reason": f"High similarity ({similarity * 100:.1f}%) with existing claim in DB"
+            }
             card = create_hitl_mediation_card(
                 expense=expense,
                 reason="POTENTIAL_DUPLICATE",
-                message=f"High similarity ({similarity * 100:.1f}%) with an existing claim ({conflicting.get('vendor_name')}, ₹{conflicting.get('total_amount')}). Confirm if unique.",
+                message=f"High similarity ({similarity * 100:.1f}%) with an existing claim ({conflicting.get('matched_vendor')}, ₹{conflicting.get('matched_amount')}). Confirm if unique.",
                 conflicting_expense=conflicting,
                 embedding=embedding
             )

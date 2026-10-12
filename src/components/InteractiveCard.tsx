@@ -249,10 +249,10 @@ export const InteractiveCard: React.FC<InteractiveCardProps> = ({ card, onResolv
               <span>Existing Claim in Database</span>
             </div>
             <div className="space-y-1 text-slate-300">
-              <p><strong className="text-slate-400">Vendor:</strong> {card.conflicting_expense.matched_vendor}</p>
-              <p><strong className="text-slate-400">Date:</strong> {card.conflicting_expense.matched_date}</p>
-              <p><strong className="text-slate-400">Amount:</strong> ₹{card.conflicting_expense.matched_amount?.toFixed(2)}</p>
-              <p><strong className="text-slate-400">Ref ID:</strong> #{card.conflicting_expense?.matched_expense_id ? card.conflicting_expense.matched_expense_id.slice(0, 8) : "N/A"}</p>
+              <p><strong className="text-slate-400">Vendor:</strong> {card.conflicting_expense?.matched_vendor || (card.conflicting_expense as any)?.vendor_name || "N/A"}</p>
+              <p><strong className="text-slate-400">Date:</strong> {card.conflicting_expense?.matched_date || (card.conflicting_expense as any)?.bill_date || "N/A"}</p>
+              <p><strong className="text-slate-400">Amount:</strong> ₹{(card.conflicting_expense?.matched_amount ?? (card.conflicting_expense as any)?.total_amount ?? 0).toFixed(2)}</p>
+              <p><strong className="text-slate-400">Ref ID:</strong> #{card.conflicting_expense?.matched_expense_id ? card.conflicting_expense.matched_expense_id.slice(0, 8) : ((card.conflicting_expense as any)?.id ? (card.conflicting_expense as any).id.slice(0, 8) : "N/A")}</p>
             </div>
           </div>
         </div>
