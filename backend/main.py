@@ -29,7 +29,7 @@ app.include_router(chat_router)
 app.include_router(conversations_router)
 app.include_router(erp_router)
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def root():
     return {
         "status": "online",
@@ -37,7 +37,7 @@ def root():
         "docs_url": "/docs",
     }
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health():
     return {"status": "healthy"}
 
